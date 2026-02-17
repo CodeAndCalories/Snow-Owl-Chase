@@ -22,13 +22,14 @@ function resize() {
   canvas.height = maxH;
   canvas.style.width = `${maxW * scale}px`;
   canvas.style.height = `${maxH * scale}px`;
+  canvas.style.touchAction = 'none';
 }
 
 resize();
 window.addEventListener('resize', resize);
 
 // Systems
-const input = new InputHandler();
+const input = new InputHandler(canvas);
 const audio = new AudioSystem();
 audio.init();
 
