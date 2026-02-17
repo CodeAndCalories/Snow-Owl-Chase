@@ -10,20 +10,14 @@ export class InputHandler {
     this._buffer = {};
     this._bufferDuration = 150; // ms
     this._bufferTimers = {};
-
-    // Touch buffer uses same consumeBuffer flow
     this._touchBuffer = {};
-    this._touchTimers = {};
-
-    // Touch gesture tracking
+    this._touchBufferTimers = {};
     this._touchStartX = 0;
     this._touchStartY = 0;
     this._touchStartT = 0;
+    this._minSwipeDist = 35;
+    this._maxSwipeTime = 450;
     this._touchActive = false;
-
-    // Tunables for swipe detection
-    this._minSwipeDist = 35; // px
-    this._maxSwipeTime = 450; // ms
 
     window.addEventListener('keydown', (e) => this._onKeyDown(e), { passive: false });
     window.addEventListener('keyup', (e) => this._onKeyUp(e));
@@ -33,7 +27,7 @@ export class InputHandler {
     target.addEventListener('touchstart', (e) => this._onTouchStart(e), { passive: false });
     target.addEventListener('touchmove', (e) => this._onTouchMove(e), { passive: false });
     target.addEventListener('touchend', (e) => this._onTouchEnd(e), { passive: false });
-
+    
     // Pointer fallback for some mobile browsers
     target.addEventListener('pointerdown', (e) => this._onPointerDown(e), { passive: false });
   }
@@ -62,14 +56,14 @@ export class InputHandler {
       this._buffer[code] = false;
     }, this._bufferDuration);
   }
-
-  _bufferTouch(code) {
-    this._touchBuffer[code] = true;
-    if (this._touchTimers[code]) clearTimeout(this._touchTimers[code]);
-    this._touchTimers[code] = setTimeout(() => {
-      this._touchBuffer[code] = false;
-    }, this._bufferDuration);
-  }
+ 
+ _bufferTouch(code) {
+  this._touchBuffer[code] = true;
+  if (this._touchBufferTimers[code]) clearTimeout(this._touchBufferTimers[code]);
+  this._touchBufferTimers[code] = setTimeout(() => {
+    this._touchBuffer[code] = false;
+  }, this._bufferDuration);
+}
 
   _onTouchStart(e) {
     if (!e.touches || e.touches.length === 0) return;
@@ -163,10 +157,10 @@ export class InputHandler {
     // Touch buffer
     if (this._touchBuffer[code]) {
       this._touchBuffer[code] = false;
-      if (this._touchTimers[code]) {
-        clearTimeout(this._touchTimers[code]);
-        this._touchTimers[code] = null;
-      }
+      if (this._touchBufferTimers[code]) {
+  clearTimeout(this._touchBufferTimers[code]);
+  this._touchBufferTimers[code] = null;
+}
       return true;
     }
 
