@@ -281,22 +281,22 @@ export class Game {
     const player = this.player;
     const difficulty = Math.min(this.level, 8);
 
-    // --- Input ---
-    // Lane movement (buffered)
-    const leftPressed = inp.consumeAnyBuffer('KeyA', 'ArrowLeft');
-    const rightPressed = inp.consumeAnyBuffer('KeyD', 'ArrowRight');
-    if (leftPressed) player.moveLeft();
-    if (rightPressed) player.moveRight();
+// --- Input ---
+// Lane movement (buffered)
+const leftPressed = inp.consumeAnyBuffer('KeyA', 'ArrowLeft', 'TouchLeft');
+const rightPressed = inp.consumeAnyBuffer('KeyD', 'ArrowRight', 'TouchRight');
+if (leftPressed) player.moveLeft();
+if (rightPressed) player.moveRight();
 
-    // Jump
-    if (inp.consumeAnyBuffer('Space')) {
-      player.jump(this.audio);
-    }
+// Jump
+if (inp.consumeAnyBuffer('Space', 'TouchUp')) {
+  player.jump(this.audio);
+}
 
-    // Dash
-    if (inp.anyPressed('ShiftLeft', 'ShiftRight')) {
-      player.dash(this.audio);
-    }
+// Dash
+if (inp.anyPressed('ShiftLeft', 'ShiftRight')) {
+  player.dash(this.audio);
+}
 
     // Axe (already handled during collision, but consumed here if pressed manually)
     // Pre-arm axe is automatic in collision system
