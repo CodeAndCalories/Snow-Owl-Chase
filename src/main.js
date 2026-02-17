@@ -34,6 +34,21 @@ audio.init();
 
 // Game
 const game = new Game(canvas, input, audio);
+function updateCursor() {
+  const menuStates = new Set([
+    'title',
+    'charselect',
+    'howtoplay',
+    'settings',
+    'gameover',
+    'upgrade',
+    'paused'
+  ]);
+
+  canvas.style.cursor = menuStates.has(game.state)
+    ? 'default'
+    : 'none';
+}
 
 // Interaction to resume audio context
 document.addEventListener('click', (e) => {
@@ -131,6 +146,8 @@ function loop(timestamp) {
   const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
   lastTime = timestamp;
 
+   updateCursor();   // ADD THIS LINE
+  
   // Handle non-playing state input
   if (game.state !== 'playing' && game.state !== 'paused') {
     game.handleUIInput();
