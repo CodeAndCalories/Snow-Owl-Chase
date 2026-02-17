@@ -85,7 +85,6 @@ function handleCanvasClick(e) {
     // Confirm button
     if (mx >= cw / 2 - 100 && mx <= cw / 2 + 100 && my >= ch - 63 && my <= ch - 11) {
       game.selectedCharIdx = game.charSelectIdx;
-      const { saveData } = await import('./utils.js').catch(() => ({ saveData: () => {} }));
       localStorage.setItem('snow_owl_selectedChar', JSON.stringify(game.charSelectIdx));
       game.state = 'title';
     }
